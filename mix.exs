@@ -8,12 +8,13 @@ defmodule Windog.MixProject do
   def project do
     [
       app: :windog,
-      version: "0.1.0",
+      version: "0.2.0",
       elixir: "~> 1.15",
       package: package(),
       description: @description,
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      docs: [source_url: "https://github.com/buysake/windog"]
     ]
   end
 
@@ -35,6 +36,7 @@ defmodule Windog.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
       {:timex, "~> 3.5"},
       {:jason, "~> 1.2"},
+      {:httpoison, "~> 1.7"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end

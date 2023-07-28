@@ -1,4 +1,6 @@
 defmodule Windog.Convertor.Race.FromResponse do
+  alias Windog.Convertor.Common.Utils
+
   alias Windog.Structs.{
     RaceContext,
     Race,
@@ -78,7 +80,7 @@ defmodule Windog.Convertor.Race.FromResponse do
           class: race_r["class"],
           distance: race_r["distance"],
           lap: race_r["lap"],
-          date: parse_date(schedule_r["date"])
+          date: Utils.parse_response_date(schedule_r["date"])
         }),
       cup:
         Cup.validate(%{
@@ -86,7 +88,7 @@ defmodule Windog.Convertor.Race.FromResponse do
           venue_id: cup["venueId"],
           name: cup["name"],
           id: schedule_r["cupId"],
-          start_date: parse_date(cup["startDate"])
+          start_date: Utils.parse_response_date(cup["startDate"])
         })
     }
   end
@@ -297,13 +299,5 @@ defmodule Windog.Convertor.Race.FromResponse do
       {f, _} -> f
       _ -> nil
     end
-  end
-
-  # * winticketはYYYYMMDDで日付を扱う
-  # * それをmongoで扱うよう最適化
-  def parse_date(date_str) do
-    date_str
-    |> Timex.parse!("{YYYY}{0M}{0D}")
-    |> Timex.Timezone.convert("Asia/Tokyo")
   end
 end

@@ -1,4 +1,4 @@
-defmodule Windog.Convertor.Race.ToRawMap do
+defmodule Windog.Convertor.Common.ToRawMap do
   def run(%NaiveDateTime{} = encodable_struct), do: encodable_struct
   def run(%DateTime{} = encodable_struct), do: encodable_struct
   def run(%Time{} = encodable_struct), do: encodable_struct

@@ -1,6 +1,7 @@
 defmodule Windog.Convertor.Race do
   alias Windog.Structs
-  alias Windog.Convertor.Race.{FromResponse, FromRawMap, ToRawMap}
+  alias Windog.Convertor.Race.{FromResponse, FromRawMap}
+  alias Windog.Convertor.Common.ToRawMap
 
   def from_response(body) do
     FromResponse.run(body)
