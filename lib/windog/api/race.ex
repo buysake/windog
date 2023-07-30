@@ -18,4 +18,28 @@ defmodule Windog.Api.Race do
         {:error, e}
     end
   end
+
+  def get_race_predict(cup_id, day_index, r) do
+    path =
+      "/v1/keirin/cups/#{cup_id}/schedules/#{day_index}/races/#{r}/prediction-comments?limit=20&token=&fields=comments,reactions,tipsters,token,hasNext,status&pfm=web"
+
+    case Base.get(path) do
+      {:ok, %{body: body, status_code: 200}} ->
+        {
+          :ok,
+          body["comments"]
+          |> Enum.map(fn c ->
+            tipster = body["tipsters"] |> Enum.find(fn t -> t["id"] == c["tipsterId"] end)
+
+            Windog.Convertor.PredictComment.from_response(c, tipster)
+          end)
+        }
+
+      {:ok, %{body: body, status_code: status}} ->
+        {:error, %{body: body, status: status}}
+
+      {:error, e} ->
+        {:error, e}
+    end
+  end
 end
