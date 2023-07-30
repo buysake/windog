@@ -19,7 +19,7 @@ defmodule Windog.Api.Race do
     end
   end
 
-  def get_race_predict(cup_id, day_index, r) do
+  def get_race_predict(cup_id, day_index, r) when is_integer(day_index) and is_integer(r) do
     path =
       "/v1/keirin/cups/#{cup_id}/schedules/#{day_index}/races/#{r}/prediction-comments?limit=20&token=&fields=comments,reactions,tipsters,token,hasNext,status&pfm=web"
 
@@ -31,7 +31,11 @@ defmodule Windog.Api.Race do
           |> Enum.map(fn c ->
             tipster = body["tipsters"] |> Enum.find(fn t -> t["id"] == c["tipsterId"] end)
 
-            Windog.Convertor.PredictComment.from_response(c, tipster)
+            Windog.Convertor.PredictComment.from_response(c, tipster,
+              cup_id: cup_id,
+              day_index: day_index,
+              r: r
+            )
           end)
         }
 
