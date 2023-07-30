@@ -14,7 +14,8 @@ defmodule Windog.Convertor.CupRace.FromResponse do
       class: race["class"],
       distance: race["distance"],
       lap: race["lap"],
-      date: Utils.parse_response_date(schedule["date"])
+      date: Utils.parse_response_date(schedule["date"]),
+      cup_id: schedule["cupId"]
     })
   end
 end

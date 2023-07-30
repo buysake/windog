@@ -80,7 +80,8 @@ defmodule Windog.Convertor.Race.FromResponse do
           class: race_r["class"],
           distance: race_r["distance"],
           lap: race_r["lap"],
-          date: Utils.parse_response_date(schedule_r["date"])
+          date: Utils.parse_response_date(schedule_r["date"]),
+          cup_id: schedule_r["cupId"]
         }),
       cup:
         Cup.validate(%{
