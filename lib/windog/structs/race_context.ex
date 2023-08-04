@@ -9,7 +9,9 @@ defmodule Windog.Structs.RaceContext do
     :race,
     :cup,
     :venue,
-    :is_defect,
+    :is_defect_line,
+    :has_absent_player,
+    :has_accident,
     :is_finish
   ]
 
@@ -26,10 +28,14 @@ defmodule Windog.Structs.RaceContext do
         cup: %Structs.Cup{} = cup,
         line: line,
         venue: %Structs.Venue{} = venue,
-        is_defect: is_defect,
+        is_defect_line: is_defect_line,
+        has_absent_player: has_absent_player,
+        has_accident: has_accident,
         is_finish: true = is_finish
       })
-      when is_boolean(is_defect) and is_boolean(is_finish) and (is_list(line) or is_nil(line)) do
+      when is_boolean(is_defect_line) and is_boolean(is_finish) and
+             (is_list(line) or is_nil(line)) and is_boolean(has_accident) and
+             is_boolean(has_absent_player) do
     %__MODULE__{
       players: players,
       line: line,
@@ -38,7 +44,9 @@ defmodule Windog.Structs.RaceContext do
       race: race,
       cup: cup,
       venue: venue,
-      is_defect: is_defect,
+      is_defect_line: is_defect_line,
+      has_absent_player: has_absent_player,
+      has_accident: has_accident,
       is_finish: is_finish
     }
   end
@@ -52,10 +60,14 @@ defmodule Windog.Structs.RaceContext do
         cup: %Structs.Cup{} = cup,
         line: line,
         venue: %Structs.Venue{} = venue,
-        is_defect: is_defect,
+        is_defect_line: is_defect_line,
+        has_absent_player: has_absent_player,
+        has_accident: has_accident,
         is_finish: false = is_finish
       })
-      when is_boolean(is_defect) and is_boolean(is_finish) and (is_list(line) or is_nil(line)) do
+      when is_boolean(is_defect_line) and is_boolean(is_finish) and
+             (is_list(line) or is_nil(line)) and is_boolean(has_absent_player) and
+             is_boolean(has_accident) do
     %__MODULE__{
       players: players,
       line: line,
@@ -64,7 +76,9 @@ defmodule Windog.Structs.RaceContext do
       race: race,
       cup: cup,
       venue: venue,
-      is_defect: is_defect,
+      is_defect_line: is_defect_line,
+      has_absent_player: has_absent_player,
+      has_accident: has_accident,
       is_finish: is_finish
     }
   end

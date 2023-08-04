@@ -8,7 +8,37 @@ defmodule Windog.Convertor.RaceTest do
       |> File.read!()
       |> Jason.decode!()
 
-    assert %Windog.Structs.RaceContext{} = Windog.Convertor.Race.from_response(sample)
+    assert %Windog.Structs.RaceContext{
+             is_finish: true,
+             has_absent_player: false,
+             has_accident: false
+           } = Windog.Convertor.Race.from_response(sample)
+  end
+
+  test "from_response/1 with has_absent_player = true" do
+    sample =
+      "test/samples/race_2023080283_2_2.json"
+      |> File.read!()
+      |> Jason.decode!()
+
+    assert %Windog.Structs.RaceContext{
+             is_finish: true,
+             has_absent_player: true,
+             has_accident: true
+           } = Windog.Convertor.Race.from_response(sample)
+  end
+
+  test "from_response/1 with has_accident = true" do
+    sample =
+      "test/samples/race_2023080445_1_5.json"
+      |> File.read!()
+      |> Jason.decode!()
+
+    assert %Windog.Structs.RaceContext{
+             is_finish: true,
+             has_absent_player: false,
+             has_accident: true
+           } = Windog.Convertor.Race.from_response(sample)
   end
 
   test "to_raw_map/1" do

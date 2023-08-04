@@ -30,7 +30,9 @@ defmodule Windog.Convertor.Race.FromResponse do
     results = parse_results(body["results"], body["entries"])
     venue = parse_venue(body["schedule"], body["cups"], body["venues"])
 
-    is_defect = [line] |> Enum.member?(nil)
+    has_absent_player = players |> Enum.any?(fn p -> p.absent end)
+    has_accident = results |> Enum.any?(fn r -> r.accident != nil end)
+    is_defect_line = line == nil
     is_finish = results != []
 
     RaceContext.validate(%{
@@ -41,7 +43,9 @@ defmodule Windog.Convertor.Race.FromResponse do
       race: race,
       venue: venue,
       cup: cup,
-      is_defect: is_defect,
+      is_defect_line: is_defect_line,
+      has_accident: has_accident,
+      has_absent_player: has_absent_player,
       is_finish: is_finish
     })
   end

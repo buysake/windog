@@ -95,7 +95,9 @@ defmodule Windog.Convertor.Race.FromRawMap do
 
     race = Race.validate(to_atom_map(str_map["race"]))
     cup = Cup.validate(to_atom_map(str_map["cup"]))
-    is_defect = line == nil or race.distance == 0
+    has_absent_player = players |> Enum.any?(fn p -> p.absent end)
+    has_accident = results |> Enum.any?(fn r -> r.accident != nil end)
+    is_defect_line = line == nil
     is_finish = results != []
     venue = Venue.validate(to_atom_map(str_map["venue"]))
 
@@ -107,7 +109,9 @@ defmodule Windog.Convertor.Race.FromRawMap do
       race: race,
       cup: cup,
       venue: venue,
-      is_defect: is_defect,
+      is_defect_line: is_defect_line,
+      has_accident: has_accident,
+      has_absent_player: has_absent_player,
       is_finish: is_finish
     })
   end
