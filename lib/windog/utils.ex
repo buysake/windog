@@ -17,6 +17,14 @@ defmodule Windog.Utils do
     _filter_odds(odds.sanrenpuku, true, one_line, two_line, three_line)
   end
 
+  def filter_odds(%Structs.OddsCategory{} = odds, :nishatan, one_line, two_line, _) do
+    _filter_odds(odds.nishatan, false, one_line, two_line, [])
+  end
+
+  def filter_odds(%Structs.OddsCategory{} = odds, :nishafuku, one_line, two_line, _) do
+    _filter_odds(odds.nishafuku, true, one_line, two_line, [])
+  end
+
   def filter_odds(%Structs.OddsCategory{} = odds, :nishatan, one_line, two_line) do
     _filter_odds(odds.nishatan, false, one_line, two_line, [])
   end
