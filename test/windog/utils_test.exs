@@ -111,4 +111,28 @@ defmodule Windog.UtilsTest do
              |> Windog.Utils.filter_odds(:nishafuku, ["1"], ["1", "2", "3", "4", "5", "6", "7"])
              |> Enum.count()
   end
+
+  test "allocation/2" do
+    sample =
+      "test/samples/race_2023042046_2_3.json"
+      |> File.read!()
+      |> Jason.decode!()
+
+    odds = Windog.Convertor.Race.from_response(sample).odds
+
+    sample =
+      odds
+      |> Windog.Utils.filter_odds(:nishafuku, ["1"], ["1", "2", "3", "4", "5", "6", "7"])
+
+    assert [100, 100, 100, 100, 100, 100] ==
+             sample |> Windog.Utils.allocation(600) |> Enum.map(fn {_, a} -> a end)
+
+    IO.inspect(sample)
+
+    assert [200, 100, 100, 400, 100, 100] ==
+             sample |> Windog.Utils.allocation(1000) |> Enum.map(fn {_, a} -> a end)
+
+    assert [0, 0, 0, 0, 0, 0] ==
+             sample |> Windog.Utils.allocation(0) |> Enum.map(fn {_, a} -> a end)
+  end
 end

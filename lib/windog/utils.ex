@@ -17,14 +17,6 @@ defmodule Windog.Utils do
     _filter_odds(odds.sanrenpuku, true, one_line, two_line, three_line)
   end
 
-  def filter_odds(%Structs.OddsCategory{} = odds, :nishatan, one_line, two_line, _) do
-    _filter_odds(odds.nishatan, false, one_line, two_line, [])
-  end
-
-  def filter_odds(%Structs.OddsCategory{} = odds, :nishafuku, one_line, two_line, _) do
-    _filter_odds(odds.nishafuku, true, one_line, two_line, [])
-  end
-
   def filter_odds(%Structs.OddsCategory{} = odds, :nishatan, one_line, two_line) do
     _filter_odds(odds.nishatan, false, one_line, two_line, [])
   end
@@ -77,5 +69,34 @@ defmodule Windog.Utils do
             (th in one_line and t in two_line and o in three_line)
       end
     end)
+  end
+
+  def allocation([%Structs.OddsItem{} | _] = odds_items, budget) do
+    odds_items
+    |> Enum.map(fn odds -> {odds, 0} end)
+    |> allocation(budget)
+  end
+
+  def allocation([{%Structs.OddsItem{}, _} | _] = odds_with_amounts, budget) when budget < 100 do
+    odds_with_amounts
+  end
+
+  def allocation([{%Structs.OddsItem{}, _} | _] = odds_with_amounts, budget) do
+    {_, min_index} =
+      odds_with_amounts
+      |> Enum.with_index()
+      |> Enum.sort(fn {{%{odds: a_odds}, a_amount}, _}, {{%{odds: b_odds}, b_amount}, _} ->
+        a_odds * a_amount < b_odds * b_amount
+      end)
+      |> Enum.at(0)
+
+    odds_with_amounts
+    |> Enum.with_index()
+    |> Enum.map(fn {{odds, amount}, index} ->
+      if index == min_index,
+        do: {odds, amount + 100},
+        else: {odds, amount}
+    end)
+    |> allocation(budget - 100)
   end
 end
