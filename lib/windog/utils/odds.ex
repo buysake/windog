@@ -1,9 +1,5 @@
-defmodule Windog.Utils do
+defmodule Windog.Utils.Odds do
   alias Windog.Structs
-
-  def build_race_url(%Structs.RaceContext{} = struct) do
-    "https://www.winticket.jp/keirin/#{struct.venue.slug}/racecard/#{struct.cup.id}/#{struct.race.day_index}/#{struct.race.r}"
-  end
 
   #
   # e.g. filter_odds(race.odds, :sanrentan, ["1"], ["1", "2", "3"], ["1", "2", "3"])

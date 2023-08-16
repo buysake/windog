@@ -15,5 +15,6 @@ end
 ## Config
 ```elixir
 config :windog,
-    token: "...."
+    token: "....",
+    short_password: "0000"
 ```
