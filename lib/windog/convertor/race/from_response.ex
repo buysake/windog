@@ -197,8 +197,13 @@ defmodule Windog.Convertor.Race.FromResponse do
         <<p::binary-size(1), "/", q::binary-size(1), "車輪">> ->
           String.to_integer(p) / String.to_integer(q) / 2.75
 
+        # 1/8車輪より小さい
         "タイヤ" ->
-          0.05
+          1 / 16 / 2.75
+
+        # タイヤの半分
+        "微差" ->
+          1 / 32 / 2.75
 
         "大差" ->
           99.9
