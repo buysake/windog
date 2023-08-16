@@ -43,7 +43,8 @@ defmodule Windog.MixProject do
       {:timex, "~> 3.5"},
       {:jason, "~> 1.2"},
       {:httpoison, "~> 1.7"},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:elixir_uuid, "~> 1.2"}
     ]
   end
 end
