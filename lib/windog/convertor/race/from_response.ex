@@ -152,7 +152,7 @@ defmodule Windog.Convertor.Race.FromResponse do
           do: margin_float,
           else:
             acc
-            |> Enum.drop(1)
+            |> Enum.filter(&(&1.order != 1))
             |> Enum.map(& &1.margin)
             |> Enum.sum()
             |> Kernel.+(margin_float)
