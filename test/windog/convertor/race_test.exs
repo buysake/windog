@@ -41,6 +41,23 @@ defmodule Windog.Convertor.RaceTest do
            } = Windog.Convertor.Race.from_response(sample)
   end
 
+  test "from_response/1 with @margin_overtime" do
+    sample =
+      "test/samples/race_2023061356_1_7.json"
+      |> File.read!()
+      |> Jason.decode!()
+
+    assert %Windog.Structs.RaceContext{
+             results: results
+           } = Windog.Convertor.Race.from_response(sample)
+
+    assert [nil, 0.75, 1.11, 1.47, 3.47, 3.56, 99.9, 99.9, nil] =
+             Enum.map(results, & &1.margin_by_top)
+
+    assert [nil, 0.75, 0.36, 0.36, 2.0, 0.09, 99.9, 99.9, nil] =
+             Enum.map(results, & &1.margin)
+  end
+
   test "to_raw_map/1" do
     sample =
       "test/samples/race_2023042046_2_3.json"

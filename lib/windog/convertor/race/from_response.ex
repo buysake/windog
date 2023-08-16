@@ -21,6 +21,8 @@ defmodule Windog.Convertor.Race.FromResponse do
     Venue
   }
 
+  @margin_overtime 99.9
+
   # body: response of /v1/keirin/cups/:cup_id/schedules/:day/races/:r?pfm=web
   def run(body) do
     %{cup: cup, race: race} = parse_race_info(body["race"], body["schedule"], body["cups"])
@@ -119,7 +121,7 @@ defmodule Windog.Convertor.Race.FromResponse do
 
   defp parse_results(result_r, entries_r) do
     result_r
-    |> Enum.map(fn r ->
+    |> Enum.reduce([], fn r, acc ->
       %{
         "playerId" => p_id,
         "hasAccident" => has_accident,
@@ -127,24 +129,87 @@ defmodule Windog.Convertor.Race.FromResponse do
         "factor" => factor,
         "finalHalfRecord" => agari_time,
         "standing" => standing,
-        "back" => back
+        "back" => back,
+        "order" => order,
+        "margin" => margin
       } = r
 
       hit =
         entries_r
         |> Enum.find(fn %{"playerId" => id} -> id == p_id end)
 
-      ResultItem.validate(%{
-        number: "#{hit["number"]}",
-        player_id: "#{p_id}",
-        has_accident: has_accident,
-        accident: with("" <- accident, do: nil),
-        factor: factor,
-        agari_time: parse_float(agari_time),
-        standing: standing,
-        back: back
-      })
+      has_overtime =
+        acc
+        |> Enum.any?(&(&1.margin == @margin_overtime))
+
+      margin_float =
+        if has_overtime and margin_to_float(margin) != nil,
+          do: @margin_overtime,
+          else: margin_to_float(margin)
+
+      margin_by_top =
+        if margin_float == nil or margin_float == @margin_overtime,
+          do: margin_float,
+          else:
+            acc
+            |> Enum.drop(1)
+            |> Enum.map(& &1.margin)
+            |> Enum.sum()
+            |> Kernel.+(margin_float)
+            |> Kernel.*(100)
+            |> round()
+            |> Kernel./(100)
+
+      acc ++
+        [
+          ResultItem.validate(%{
+            number: "#{hit["number"]}",
+            player_id: "#{p_id}",
+            has_accident: has_accident,
+            accident: with("" <- accident, do: nil),
+            factor: factor,
+            agari_time: if(agari_time == 0.0, do: nil, else: parse_float(agari_time)),
+            standing: standing,
+            back: back,
+            order: with(0 <- order, do: nil),
+            margin: margin_float,
+            margin_by_top: margin_by_top
+          })
+        ]
     end)
+  end
+
+  defp margin_to_float(str) do
+    float =
+      case str do
+        <<p::binary-size(1), "車身">> ->
+          String.to_integer(p) / 1
+
+        <<p::binary-size(1), "/", q::binary-size(1), "車身">> ->
+          String.to_integer(p) / String.to_integer(q)
+
+        <<p::binary-size(1), "車身", q::binary-size(1), "/", r::binary-size(1)>> ->
+          String.to_integer(p) + String.to_integer(q) / String.to_integer(r)
+
+        <<p::binary-size(1), "車輪">> ->
+          String.to_integer(p) / 2.75
+
+        <<p::binary-size(1), "/", q::binary-size(1), "車輪">> ->
+          String.to_integer(p) / String.to_integer(q) / 2.75
+
+        "タイヤ" ->
+          0.05
+
+        "大差" ->
+          99.9
+
+        "" ->
+          nil
+      end
+
+    if float == nil,
+      do: nil,
+      else: round(float * 100) / 100
   end
 
   defp parse_line(nil) do
@@ -203,7 +268,7 @@ defmodule Windog.Convertor.Race.FromResponse do
           accident: with("" <- r["accident"], do: nil),
           back: r["back"],
           standing: r["standing"],
-          order: r["order"],
+          order: with(0 <- r["order"], do: nil),
           agari_time: parse_float(r["finalHalfRecord"]),
           race_id: r["raceId"],
           display_type: r["displayType"],

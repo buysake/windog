@@ -127,8 +127,6 @@ defmodule Windog.UtilsTest do
     assert [100, 100, 100, 100, 100, 100] ==
              sample |> Windog.Utils.allocation(600) |> Enum.map(fn {_, a} -> a end)
 
-    IO.inspect(sample)
-
     assert [200, 100, 100, 400, 100, 100] ==
              sample |> Windog.Utils.allocation(1000) |> Enum.map(fn {_, a} -> a end)
 

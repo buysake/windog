@@ -36,7 +36,7 @@ defmodule Windog.Structs.ResultHistoryRace do
       })
       when is_integer(day) and is_boolean(has_accident) and
              (is_binary(accident) or is_nil(accident)) and
-             is_boolean(standing) and is_boolean(back) and is_integer(order) and
+             is_boolean(standing) and is_boolean(back) and (order in 1..9 or is_nil(order)) and
              is_float(agari_time) and is_binary(race_id) and is_integer(display_type) and
              is_binary(factor) and is_binary(race_type_short) and is_binary(margin) do
     %__MODULE__{
