@@ -158,8 +158,12 @@ defmodule Windog.Convertor.Race.FromResponse do
             # 大差は合計着差を計算せずに@margin_overtime
             @margin_overtime
 
-          # 1着
+          # 1着 or 失格
           margin == nil and order in [0, 1] ->
+            nil
+
+          # 落車→再乗などのパターン
+          margin == nil and agari_time == 0.0 ->
             nil
 
           true ->
