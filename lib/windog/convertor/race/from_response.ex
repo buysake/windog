@@ -163,7 +163,7 @@ defmodule Windog.Convertor.Race.FromResponse do
             nil
 
           # 落車→再乗などのパターン
-          margin == nil and agari_time == 0.0 ->
+          margin == nil and agari_time == "0.0" ->
             nil
 
           true ->
@@ -187,7 +187,7 @@ defmodule Windog.Convertor.Race.FromResponse do
             has_accident: has_accident,
             accident: with("" <- accident, do: nil),
             factor: factor,
-            agari_time: if(agari_time == 0.0, do: nil, else: parse_float(agari_time)),
+            agari_time: if(agari_time == "0.0", do: nil, else: parse_float(agari_time)),
             standing: standing,
             back: back,
             order: with(0 <- order, do: nil),
