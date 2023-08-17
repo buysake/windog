@@ -43,7 +43,7 @@ defmodule Windog.Convertor.RaceTest do
 
   test "from_response/1 with @margin_overtime" do
     sample =
-      "test/samples/race_2023061356_1_7.json"
+      "test/samples/race_2023061356_1_8.json"
       |> File.read!()
       |> Jason.decode!()
 
@@ -51,11 +51,32 @@ defmodule Windog.Convertor.RaceTest do
              results: results
            } = Windog.Convertor.Race.from_response(sample)
 
-    assert [nil, 0.75, 1.11, 1.47, 3.47, 3.56, 99.9, 99.9, nil] =
+    assert [nil, _, _, _, _, _, _, _, 99.9] =
              Enum.map(results, & &1.margin_by_top)
 
-    assert [nil, 0.75, 0.36, 0.36, 2.0, 0.09, 99.9, 99.9, nil] =
+    assert [nil, _, _, _, _, _, _, _, 99.9] =
              Enum.map(results, & &1.margin)
+  end
+
+  test "from_response/1 with equal order" do
+    sample =
+      "test/samples/race_2022111284_3_5.json"
+      |> File.read!()
+      |> Jason.decode!()
+
+    assert %Windog.Structs.RaceContext{
+             results: results
+           } = Windog.Convertor.Race.from_response(sample)
+
+    assert [_, _, _, a, b, c, _] =
+             Enum.map(results, & &1.margin_by_top)
+
+    assert [a, b, c] |> Enum.uniq() |> Enum.count() == 1
+
+    assert [_, _, _, a, b, c, _] =
+             Enum.map(results, & &1.margin)
+
+    assert [a, b, c] |> Enum.uniq() |> Enum.count() == 1
   end
 
   test "to_raw_map/1" do

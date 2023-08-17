@@ -131,34 +131,49 @@ defmodule Windog.Convertor.Race.FromResponse do
         "standing" => standing,
         "back" => back,
         "order" => order,
-        "margin" => margin
+        "margin" => margin_str
       } = r
 
       hit =
         entries_r
         |> Enum.find(fn %{"playerId" => id} -> id == p_id end)
 
-      has_overtime =
+      # 同着のデータが積まれているか
+      equal_order =
         acc
-        |> Enum.any?(&(&1.margin == @margin_overtime))
+        |> Enum.find(&(&1.order == order))
 
-      margin_float =
-        if has_overtime and margin_to_float(margin) != nil,
-          do: @margin_overtime,
-          else: margin_to_float(margin)
+      margin =
+        cond do
+          equal_order != nil ->
+            equal_order.margin
+
+          true ->
+            margin_to_float(margin_str)
+        end
 
       margin_by_top =
-        if margin_float == nil or margin_float == @margin_overtime,
-          do: margin_float,
-          else:
+        cond do
+          margin == @margin_overtime ->
+            # 大差は合計着差を計算せずに@margin_overtime
+            @margin_overtime
+
+          # 1着
+          margin == nil and order in [0, 1] ->
+            nil
+
+          true ->
             acc
             |> Enum.filter(&(&1.order != 1))
+            |> Enum.filter(&(&1.order != order))
+            |> Enum.uniq_by(& &1.order)
             |> Enum.map(& &1.margin)
             |> Enum.sum()
-            |> Kernel.+(margin_float)
+            |> Kernel.+(margin)
             |> Kernel.*(100)
             |> round()
             |> Kernel./(100)
+        end
 
       acc ++
         [
@@ -172,7 +187,7 @@ defmodule Windog.Convertor.Race.FromResponse do
             standing: standing,
             back: back,
             order: with(0 <- order, do: nil),
-            margin: margin_float,
+            margin: margin,
             margin_by_top: margin_by_top
           })
         ]
