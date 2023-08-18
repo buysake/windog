@@ -144,13 +144,14 @@ defmodule Windog.Convertor.Race.FromResponse do
         |> Enum.find(&(&1.order == order))
 
       margin =
-        cond do
-          equal_order != nil ->
-            equal_order.margin
+        if equal_order == nil,
+          do: margin_to_float(margin_str),
+          else: equal_order.margin
 
-          true ->
-            margin_to_float(margin_str)
-        end
+      enable_max_order =
+        result_r
+        |> Enum.map(& &1["order"])
+        |> Enum.max()
 
       margin_by_top =
         cond do
@@ -164,6 +165,10 @@ defmodule Windog.Convertor.Race.FromResponse do
 
           # 落車→再乗などのパターン
           margin == nil and agari_time == "0.0" ->
+            nil
+
+          # 何らかのケースで最下位の着差が計測されないパターン
+          margin == nil and order == enable_max_order ->
             nil
 
           true ->
