@@ -7,7 +7,7 @@
 ```elixir
 def deps do
   [
-    {:windog, "~> 0.5.4"}
+    {:windog, "~> 0.5.5"}
   ]
 end
 ```
