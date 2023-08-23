@@ -121,6 +121,17 @@ defmodule Windog.Convertor.Race.FromResponse do
 
   defp parse_results(result_r, entries_r) do
     result_r
+    # 順番が1着から降ってくるとは限らない
+    # * e.g. https://www.winticket.jp/keirin/nara/raceresult/2018122053/4/3
+    |> Enum.sort(fn a, b ->
+      fallback = fn v ->
+        if v == 0, do: 999, else: v
+      end
+
+      if a["order"] == b["order"],
+        do: true,
+        else: fallback.(a["order"]) < fallback.(b["order"])
+    end)
     |> Enum.reduce([], fn r, acc ->
       %{
         "playerId" => p_id,

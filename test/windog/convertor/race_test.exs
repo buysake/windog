@@ -79,6 +79,20 @@ defmodule Windog.Convertor.RaceTest do
     assert [a, b, c] |> Enum.uniq() |> Enum.count() == 1
   end
 
+  test "from_response/1 with broken data" do
+    sample =
+      "test/samples/race_2018122053_4_3.json"
+      |> File.read!()
+      |> Jason.decode!()
+
+    assert %Windog.Structs.RaceContext{
+             results: results
+           } = Windog.Convertor.Race.from_response(sample)
+
+    # NOTE: https://keirin.netkeiba.com/db/result/?race_id=201812235303
+    assert ["7", "6", "3", "5", "4", "2", "1"] = Enum.map(results, & &1.number)
+  end
+
   test "to_raw_map/1" do
     sample =
       "test/samples/race_2023042046_2_3.json"
