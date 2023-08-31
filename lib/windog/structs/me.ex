@@ -2,7 +2,8 @@ defmodule Windog.Structs.Me do
   alias Windog.Structs
 
   @keys [
-    :wallet
+    :wallet,
+    :stage
   ]
 
   @enforce_keys @keys
@@ -10,10 +11,12 @@ defmodule Windog.Structs.Me do
   defstruct @keys
 
   def validate(%{
-        wallet: %Structs.Me.Wallet{} = wallet
+        wallet: %Structs.Me.Wallet{} = wallet,
+        stage: %Structs.Me.Stage{} = stage
       }) do
     %__MODULE__{
-      wallet: wallet
+      wallet: wallet,
+      stage: stage
     }
   end
 end

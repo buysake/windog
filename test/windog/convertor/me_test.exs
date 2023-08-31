@@ -19,6 +19,6 @@ defmodule Windog.Convertor.MeTest do
 
     me = Windog.Convertor.Me.from_response(sample)
 
-    assert %{wallet: %{}} = Windog.Convertor.Me.to_raw_map(me)
+    assert %{wallet: %{}, stage: %{}} = Windog.Convertor.Me.to_raw_map(me)
   end
 end
