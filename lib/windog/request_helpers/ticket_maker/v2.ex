@@ -94,4 +94,24 @@ defmodule Windog.RequestHelpers.TicketMaker.V2 do
       }
     end)
   end
+
+  # -----------------------------------
+  # NOTE: set_unit/3
+  # * Rewrites `unitQuantity` of the item matching the specified key
+  # -----------------------------------
+
+  def set_unit(tickets, key, unit) when is_list(key) and is_integer(unit) do
+    next =
+      tickets["points"]
+      |> Enum.map(fn %{"key" => k, "unitQuantity" => q} ->
+        if k != key,
+          do: %{"key" => k, "unitQuantity" => q},
+          else: %{
+            "key" => k,
+            "unitQuantity" => unit
+          }
+      end)
+
+    Map.put(tickets, "points", next)
+  end
 end
