@@ -1,5 +1,6 @@
 defmodule Windog.RequestHelpers.TicketMaker.V2 do
   alias Windog.Utils.BracketNumber
+  alias Windog.Structs.RaceContext
 
   # -----------------------------------
   # NOTE: make_nishatan/2, make_sanrentan/2
@@ -7,27 +8,29 @@ defmodule Windog.RequestHelpers.TicketMaker.V2 do
   # * All amounts are set as `1`
   # -----------------------------------
 
-  def make_nishatan([[s | _], [_ | _]] = formation, total_players) when is_integer(s) do
+  def make_nishatan([[s | _], [_ | _]] = formation, %RaceContext{} = context)
+      when is_integer(s) do
     %{
       "type" => 4,
       "style" => 0,
       "favoriteType" => 0,
       "aggregateSelection" => %{
         "multi" => false,
-        "entrySelections" => make_selections(formation, total_players)
+        "entrySelections" => make_selections(formation, Enum.count(context.players))
       },
       "points" => make_points(formation)
     }
   end
 
-  def make_sanrentan([[s | _], [_ | _], [_ | _]] = formation, total_players) when is_integer(s) do
+  def make_sanrentan([[s | _], [_ | _], [_ | _]] = formation, %RaceContext{} = context)
+      when is_integer(s) do
     %{
       "type" => 2,
       "style" => 0,
       "favoriteType" => 0,
       "aggregateSelection" => %{
         "multi" => false,
-        "entrySelections" => make_selections(formation, total_players)
+        "entrySelections" => make_selections(formation, Enum.count(context.players))
       },
       "points" => make_points(formation)
     }
