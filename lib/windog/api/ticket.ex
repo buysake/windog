@@ -39,4 +39,41 @@ defmodule Windog.Api.Ticket do
         {:error, e}
     end
   end
+
+  def buy_v2(%RaceContext{} = context, [_ | _] = items) do
+    short_password = Application.get_env(:windog, :short_password)
+    buy_v2(context, items, short_password)
+  end
+
+  def buy_v2(_, _) do
+    {:error, :items_empty}
+  end
+
+  defp buy_v2(_, _, nil) do
+    {:error, :not_set_password}
+  end
+
+  defp buy_v2(%RaceContext{} = context, [_ | _] = items, short_password) do
+    path =
+      "/v1/keirin/cups/#{context.cup.id}/schedules/#{context.race.day_index}/races/#{context.race.r}/betting-tickets?version=2&pfm=web"
+
+    body = %{
+      "requestId" => UUID.uuid4(),
+      "raceId" => context.race.id,
+      "shortPassword" => short_password,
+      "items" => items
+    }
+
+    case Base.post(path, Jason.encode!(body)) do
+      {:ok, %{status_code: 200, body: _, headers: headers}} ->
+        responsed_at = HTTPoisonHelper.get_date_from_header(headers)
+        {:ok, responsed_at}
+
+      {:ok, %{body: body, status_code: status}} ->
+        {:error, %{body: body, status: status}}
+
+      {:error, e} ->
+        {:error, e}
+    end
+  end
 end

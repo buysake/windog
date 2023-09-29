@@ -7,7 +7,7 @@
 ```elixir
 def deps do
   [
-    {:windog, "~> 0.6.2"}
+    {:windog, "~> 0.7.0"}
   ]
 end
 ```
@@ -21,12 +21,13 @@ config :windog,
 
 ## Example
 ```elixir
-# 📅 Get race data ( e.g. /keirin/beppu/racecard/2023081586/3/1 )
-{:ok, race_context} = Windog.Api.Race.get_race("2023081586", "3", "1")
+# 📅 Get race data ( e.g. /keirin/beppu/racecard/2023092845/3/11 )
+{:ok, race_context} = Windog.Api.Race.get_race("2023092845", "3", "11")
 
 # 🎫 Assemble ticket ( e.g. 二車単 1-3 )
-ticket = Windog.RequestHelpers.TicketMaker.V1.make_nishatan([1,3], 100)
+base_ticket = Windog.RequestHelpers.TicketMaker.V2.make_nishatan([[7], [2, 8]], race_context)
+ticket = Windog.RequestHelpers.TicketMaker.V2.set_unit(base_ticket, [7, 2], 2)
 
 # 🤤 Buy
-Windog.Api.Ticket.buy(race_context, [ticket])
+Windog.Api.Ticket.buy_v2(race_context, [ticket])
 ```
