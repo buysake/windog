@@ -15,6 +15,7 @@ defmodule Windog.Convertor.Race.FromRawMap do
     PlayerRecordPercent,
     PlayerRecordEx,
     PlayerRecordExCount,
+    PlayerRecordExCountMin,
     PlayerRecordSB,
     Venue
   }
@@ -48,7 +49,15 @@ defmodule Windog.Convertor.Race.FromRawMap do
                   is_line_tail:
                     PlayerRecordExCount.validate(to_atom_map(p["record"]["ex"]["is_line_tail"])),
                   is_single:
-                    PlayerRecordExCount.validate(to_atom_map(p["record"]["ex"]["is_single"]))
+                    PlayerRecordExCount.validate(to_atom_map(p["record"]["ex"]["is_single"])),
+                  chigiri:
+                    PlayerRecordExCountMin.validate(to_atom_map(p["record"]["ex"]["chigiri"])),
+                  chigirare:
+                    PlayerRecordExCountMin.validate(to_atom_map(p["record"]["ex"]["chigirare"])),
+                  tobitsuki:
+                    PlayerRecordExCountMin.validate(to_atom_map(p["record"]["ex"]["tobitsuki"])),
+                  tsuppari:
+                    PlayerRecordExCountMin.validate(to_atom_map(p["record"]["ex"]["tsuppari"])),
                 })
             }),
           current_cup:

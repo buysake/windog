@@ -17,6 +17,7 @@ defmodule Windog.Convertor.Race.FromResponse do
     PlayerRecordPercent,
     PlayerRecordEx,
     PlayerRecordExCount,
+    PlayerRecordExCountMin,
     PlayerRecordSB,
     Venue
   }
@@ -387,6 +388,26 @@ defmodule Windog.Convertor.Race.FromResponse do
                   second: hit["lineSingleHorseman"]["second"],
                   third: hit["lineSingleHorseman"]["third"],
                   total: hit["lineSingleHorseman"]["total"]
+                }),
+              chigiri:
+                PlayerRecordExCountMin.validate(%{
+                  succeeded: hit["exLeftBehind"]["succeeded"],
+                  total: hit["exLeftBehind"]["total"]
+                }),
+              chigirare:
+                PlayerRecordExCountMin.validate(%{
+                  succeeded: hit["exSplitLine"]["succeeded"],
+                  total: hit["exSplitLine"]["total"]
+                }),
+              tobitsuki:
+                PlayerRecordExCountMin.validate(%{
+                  succeeded: hit["exSnatch"]["succeeded"],
+                  total: hit["exSnatch"]["total"]
+                }),
+              tsuppari:
+                PlayerRecordExCountMin.validate(%{
+                  succeeded: hit["exThrust"]["succeeded"],
+                  total: hit["exThrust"]["total"]
                 })
             })
         })
