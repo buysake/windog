@@ -1,12 +1,11 @@
 defmodule Windog.Convertor.Race.FromResponse do
   alias Windog.Convertor.Common.Utils
+  alias Windog.Convertor
 
   alias Windog.Structs.{
     RaceContext,
     Race,
     Cup,
-    OddsItem,
-    Odds,
     ResultItem,
     PlayerDetail,
     Player,
@@ -29,7 +28,7 @@ defmodule Windog.Convertor.Race.FromResponse do
     %{cup: cup, race: race} = parse_race_info(body["race"], body["schedule"], body["cups"])
     players = parse_players(body["entries"], body["players"], body["records"])
     line = parse_line(body["linePrediction"])
-    odds = parse_odds(body)
+    odds = Convertor.Odds.from_response(body)
     results = parse_results(body["results"], body["entries"])
     venue = parse_venue(body["schedule"], body["cups"], body["venues"])
 
@@ -100,26 +99,6 @@ defmodule Windog.Convertor.Race.FromResponse do
           start_date: Utils.parse_response_date(cup["startDate"])
         })
     }
-  end
-
-  defp parse_odds([%{"key" => _, "odds" => _} | _] = odds) do
-    odds
-    |> Enum.map(fn odd ->
-      OddsItem.validate(%{
-        key: Enum.map(odd["key"], fn k -> "#{k}" end),
-        odds: odd["odds"]
-      })
-    end)
-  end
-
-  defp parse_odds(%{"quinella" => _} = odds_r) do
-    Odds.validate(%{
-      nishafuku: parse_odds(odds_r["quinella"]),
-      nishatan: parse_odds(odds_r["exacta"]),
-      sanrenpuku: parse_odds(odds_r["trio"]),
-      sanrentan: parse_odds(odds_r["trifecta"]),
-      updated_at: odds_r["oddsUpdatedAt"]
-    })
   end
 
   defp parse_results(result_r, entries_r) do

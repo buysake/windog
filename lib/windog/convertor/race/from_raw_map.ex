@@ -1,10 +1,10 @@
 defmodule Windog.Convertor.Race.FromRawMap do
+  alias Windog.Convertor
+
   alias Windog.Structs.{
     RaceContext,
     Race,
     Cup,
-    OddsItem,
-    Odds,
     ResultItem,
     PlayerDetail,
     Player,
@@ -21,7 +21,7 @@ defmodule Windog.Convertor.Race.FromRawMap do
   }
 
   def run(map) do
-    str_map = stringify_keys(map)
+    str_map = Convertor.Common.Utils.stringify_keys(map)
 
     players =
       str_map["players"]
@@ -90,18 +90,7 @@ defmodule Windog.Convertor.Race.FromRawMap do
         ResultItem.validate(to_atom_map(r))
       end)
 
-    odds =
-      Odds.validate(%{
-        nishatan:
-          str_map["odds"]["nishatan"] |> Enum.map(fn v -> OddsItem.validate(to_atom_map(v)) end),
-        nishafuku:
-          str_map["odds"]["nishafuku"] |> Enum.map(fn v -> OddsItem.validate(to_atom_map(v)) end),
-        sanrenpuku:
-          str_map["odds"]["sanrenpuku"] |> Enum.map(fn v -> OddsItem.validate(to_atom_map(v)) end),
-        sanrentan:
-          str_map["odds"]["sanrentan"] |> Enum.map(fn v -> OddsItem.validate(to_atom_map(v)) end),
-        updated_at: str_map["odds"]["updated_at"]
-      })
+    odds = Convertor.Odds.from_raw_map(str_map["odds"])
 
     race = Race.validate(to_atom_map(str_map["race"]))
     cup = Cup.validate(to_atom_map(str_map["cup"]))
@@ -128,34 +117,6 @@ defmodule Windog.Convertor.Race.FromRawMap do
   end
 
   defp to_atom_map(map) do
-    map
-    |> Enum.into(Map.new(), fn {k, v} -> {String.to_atom(k), v} end)
-  end
-
-  defp stringify_keys(nil), do: nil
-
-  defp stringify_keys(%DateTime{} = dt) do
-    dt
-  end
-
-  defp stringify_keys(%{} = map) do
-    map
-    |> Enum.map(fn {k, v} ->
-      next_k =
-        if is_atom(k),
-          do: Atom.to_string(k),
-          else: k
-
-      {next_k, stringify_keys(v)}
-    end)
-    |> Enum.into(%{})
-  end
-
-  defp stringify_keys([head | rest]) do
-    [stringify_keys(head) | stringify_keys(rest)]
-  end
-
-  defp stringify_keys(not_a_map) do
-    not_a_map
+    Convertor.Common.Utils.to_atom_map(map)
   end
 end
