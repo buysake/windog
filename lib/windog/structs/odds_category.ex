@@ -16,7 +16,7 @@ defmodule Windog.Structs.OddsCategory do
     nishafuku: [%Structs.OddsItem{} | _] = nishafuku,
     nishatan: [%Structs.OddsItem{} | _] = nishatan,
     sanrenpuku: [%Structs.OddsItem{} | _] = sanrenpuku,
-    sanrentan: [%Structs.OddsItem{} | _] = sanrentan,
+    sanrentan: [%Structs.OddsItem{} | _] = sanrentan
       }) do
     %__MODULE__{
       nishatan: nishatan,

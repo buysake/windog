@@ -43,6 +43,7 @@ defmodule Windog.Convertor.Race.FromResponse do
       line: line,
       results: results,
       odds: odds,
+      odds_updated_at: body["oddsUpdatedAt"],
       race: race,
       venue: venue,
       cup: cup,

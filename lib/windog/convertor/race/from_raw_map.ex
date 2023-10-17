@@ -115,6 +115,7 @@ defmodule Windog.Convertor.Race.FromRawMap do
       line: line,
       results: results,
       odds: odds,
+      odds_updated_at: str_map["odds_updated_at"],
       race: race,
       cup: cup,
       venue: venue,
