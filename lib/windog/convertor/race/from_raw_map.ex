@@ -4,7 +4,7 @@ defmodule Windog.Convertor.Race.FromRawMap do
     Race,
     Cup,
     OddsItem,
-    OddsCategory,
+    Odds,
     ResultItem,
     PlayerDetail,
     Player,
@@ -57,7 +57,7 @@ defmodule Windog.Convertor.Race.FromRawMap do
                   tobitsuki:
                     PlayerRecordExCountMin.validate(to_atom_map(p["record"]["ex"]["tobitsuki"])),
                   tsuppari:
-                    PlayerRecordExCountMin.validate(to_atom_map(p["record"]["ex"]["tsuppari"])),
+                    PlayerRecordExCountMin.validate(to_atom_map(p["record"]["ex"]["tsuppari"]))
                 })
             }),
           current_cup:
@@ -91,7 +91,7 @@ defmodule Windog.Convertor.Race.FromRawMap do
       end)
 
     odds =
-      OddsCategory.validate(%{
+      Odds.validate(%{
         nishatan:
           str_map["odds"]["nishatan"] |> Enum.map(fn v -> OddsItem.validate(to_atom_map(v)) end),
         nishafuku:
@@ -99,7 +99,8 @@ defmodule Windog.Convertor.Race.FromRawMap do
         sanrenpuku:
           str_map["odds"]["sanrenpuku"] |> Enum.map(fn v -> OddsItem.validate(to_atom_map(v)) end),
         sanrentan:
-          str_map["odds"]["sanrentan"] |> Enum.map(fn v -> OddsItem.validate(to_atom_map(v)) end)
+          str_map["odds"]["sanrentan"] |> Enum.map(fn v -> OddsItem.validate(to_atom_map(v)) end),
+        updated_at: str_map["odds"]["updated_at"]
       })
 
     race = Race.validate(to_atom_map(str_map["race"]))

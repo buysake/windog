@@ -5,19 +5,19 @@ defmodule Windog.Utils.Odds do
   # e.g. filter_odds(race.odds, :sanrentan, ["1"], ["1", "2", "3"], ["1", "2", "3"])
   #
 
-  def filter_odds(%Structs.OddsCategory{} = odds, :sanrentan, one_line, two_line, three_line) do
+  def filter_odds(%Structs.Odds{} = odds, :sanrentan, one_line, two_line, three_line) do
     _filter_odds(odds.sanrentan, false, one_line, two_line, three_line)
   end
 
-  def filter_odds(%Structs.OddsCategory{} = odds, :sanrenpuku, one_line, two_line, three_line) do
+  def filter_odds(%Structs.Odds{} = odds, :sanrenpuku, one_line, two_line, three_line) do
     _filter_odds(odds.sanrenpuku, true, one_line, two_line, three_line)
   end
 
-  def filter_odds(%Structs.OddsCategory{} = odds, :nishatan, one_line, two_line) do
+  def filter_odds(%Structs.Odds{} = odds, :nishatan, one_line, two_line) do
     _filter_odds(odds.nishatan, false, one_line, two_line, [])
   end
 
-  def filter_odds(%Structs.OddsCategory{} = odds, :nishafuku, one_line, two_line) do
+  def filter_odds(%Structs.Odds{} = odds, :nishafuku, one_line, two_line) do
     _filter_odds(odds.nishafuku, true, one_line, two_line, [])
   end
 

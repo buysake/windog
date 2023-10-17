@@ -6,7 +6,7 @@ defmodule Windog.Convertor.Race.FromResponse do
     Race,
     Cup,
     OddsItem,
-    OddsCategory,
+    Odds,
     ResultItem,
     PlayerDetail,
     Player,
@@ -113,11 +113,12 @@ defmodule Windog.Convertor.Race.FromResponse do
   end
 
   defp parse_odds(%{"quinella" => _} = odds_r) do
-    OddsCategory.validate(%{
+    Odds.validate(%{
       nishafuku: parse_odds(odds_r["quinella"]),
       nishatan: parse_odds(odds_r["exacta"]),
       sanrenpuku: parse_odds(odds_r["trio"]),
-      sanrentan: parse_odds(odds_r["trifecta"])
+      sanrentan: parse_odds(odds_r["trifecta"]),
+      updated_at: odds_r["oddsUpdatedAt"]
     })
   end
 

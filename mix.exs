@@ -8,7 +8,7 @@ defmodule Windog.MixProject do
   def project do
     [
       app: :windog,
-      version: "0.7.2",
+      version: "0.7.3",
       elixir: "~> 1.15",
       package: package(),
       description: @description,
