@@ -46,4 +46,22 @@ defmodule Windog.Api.Race do
         {:error, e}
     end
   end
+
+  def get_race_odds(cup_id, day_index, r) do
+    path = "/v1/keirin/cups/#{cup_id}/schedules/#{day_index}/races/#{r}/odds?pfm=web"
+
+    case Base.get(path) do
+      {:ok, %{body: body, status_code: 200}} ->
+        {
+          :ok,
+          Windog.Convertor.Odds.from_response(body)
+        }
+
+      {:ok, %{body: body, status_code: status}} ->
+        {:error, %{body: body, status: status}}
+
+      {:error, e} ->
+        {:error, e}
+    end
+  end
 end
