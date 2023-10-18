@@ -11,7 +11,9 @@ defmodule Windog.Structs.Race do
     :distance,
     :lap,
     :date,
-    :cup_id
+    :cup_id,
+    :labels,
+    :grade
   ]
 
   @enforce_keys @keys
@@ -30,12 +32,14 @@ defmodule Windog.Structs.Race do
         class: class,
         distance: distance,
         lap: lap,
-        cup_id: cup_id
+        cup_id: cup_id,
+        labels: labels,
+        grade: grade
       })
       when is_binary(id) and is_integer(r) and is_integer(day) and is_binary(type) and
              is_binary(class) and is_integer(distance) and is_integer(lap) and
              is_integer(day_index) and is_integer(start_at) and is_integer(close_at) and
-             is_binary(cup_id) do
+             is_binary(cup_id) and is_number(grade) and is_list(labels) do
     %__MODULE__{
       id: id,
       date: date,
@@ -48,7 +52,9 @@ defmodule Windog.Structs.Race do
       class: class,
       distance: distance,
       lap: lap,
-      cup_id: cup_id
+      cup_id: cup_id,
+      labels: labels,
+      grade: grade
     }
   end
 end

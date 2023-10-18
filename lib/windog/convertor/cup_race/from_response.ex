@@ -2,7 +2,7 @@ defmodule Windog.Convertor.CupRace.FromResponse do
   alias Windog.Structs.Race
   alias Windog.Convertor.Common.Utils
 
-  def run(%{} = race, %{} = schedule) do
+  def run(%{} = race, %{} = schedule, %{} = cup) do
     Race.validate(%{
       id: race["id"],
       r: race["number"],
@@ -15,7 +15,9 @@ defmodule Windog.Convertor.CupRace.FromResponse do
       distance: race["distance"],
       lap: race["lap"],
       date: Utils.parse_response_date(schedule["date"]),
-      cup_id: schedule["cupId"]
+      cup_id: schedule["cupId"],
+      labels: cup["labels"],
+      grade: cup["grade"]
     })
   end
 end

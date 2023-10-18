@@ -12,7 +12,7 @@ defmodule Windog.Convertor.CupRaceTest do
       body["races"]
       |> Enum.map(fn r ->
         schedule = Enum.find(body["schedules"], fn s -> r["scheduleId"] == s["id"] end)
-        Windog.Convertor.CupRace.from_response(r, schedule)
+        Windog.Convertor.CupRace.from_response(r, schedule, body["cup"])
       end)
 
     assert %Windog.Structs.Race{} = head
@@ -28,7 +28,7 @@ defmodule Windog.Convertor.CupRaceTest do
       body["races"]
       |> Enum.map(fn r ->
         schedule = Enum.find(body["schedules"], fn s -> r["scheduleId"] == s["id"] end)
-        Windog.Convertor.CupRace.from_response(r, schedule)
+        Windog.Convertor.CupRace.from_response(r, schedule, body["cup"])
       end)
 
     assert %{} = Windog.Convertor.CupRace.to_raw_map(head)

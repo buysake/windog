@@ -25,7 +25,8 @@ defmodule Windog.Api.Schedule do
           body["races"]
           |> Enum.map(fn r ->
             schedule = Enum.find(body["schedules"], fn s -> r["scheduleId"] == s["id"] end)
-            Windog.Convertor.CupRace.from_response(r, schedule)
+            cup = Enum.find(body["cups"], fn c -> schedule["cupId"] == c["id"] end)
+            Windog.Convertor.CupRace.from_response(r, schedule, cup)
           end)
         }
 

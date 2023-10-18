@@ -6,6 +6,7 @@ defmodule Windog.Convertor.Cup.FromResponse do
   def run(body) do
     Cup.validate(%{
       grade: body["grade"],
+      labels: body["labels"],
       venue_id: body["venueId"],
       name: body["name"],
       id: body["id"],
